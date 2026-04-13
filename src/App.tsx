@@ -17,7 +17,23 @@ import {
 
 // --- Types & Constants ---
 
-type Act = 'I' | 'II' | 'III' | 'IV' | 'V';
+type Act = 'Setup' | 'I' | 'II' | 'III' | 'IV' | 'V';
+
+interface UserData {
+  age: number;
+  sleepHours: number;
+  workHours: number;
+  screenHours: number;
+  lifespan: number;
+}
+
+const DEFAULT_USER: UserData = {
+  age: 18,
+  sleepHours: 8,
+  workHours: 40,
+  screenHours: 7,
+  lifespan: 90,
+};
 
 interface Category {
   id: string;
@@ -27,19 +43,41 @@ interface Category {
   description: string;
 }
 
-const TOTAL_MONTHS = 864;
-
-const CATEGORIES: Category[] = [
-  { id: 'sleep', label: 'Sleep', months: 288, color: 'bg-neutral-800', description: '8 hours a day, every day.' },
-  { id: 'work', label: 'Work/School', months: 110, color: 'bg-neutral-700', description: '40 hours a week until age 65.' },
-  { id: 'needs', label: 'Basic Needs', months: 65, color: 'bg-neutral-600', description: 'Eating, hygiene, bathroom.' },
-  { id: 'chores', label: 'Chores', months: 35, color: 'bg-neutral-500', description: 'Cleaning, shopping, life admin.' },
-  { id: 'commute', label: 'Commuting', months: 32, color: 'bg-neutral-400', description: 'Driving, transit, traffic.' },
-  { id: 'screen', label: 'Screen Time', months: 310, color: 'bg-red-600', description: '93% of your free time.' },
-  { id: 'freedom', label: 'Pure Freedom', months: 24, color: 'bg-amber-500', description: 'What remains for your passions.' },
-];
+const CATEGORY_COLORS = {
+  sleep: 'bg-neutral-800',
+  work: 'bg-neutral-700',
+  needs: 'bg-neutral-600',
+  chores: 'bg-neutral-500',
+  commute: 'bg-neutral-400',
+  screen: 'bg-red-600',
+  freedom: 'bg-amber-500',
+};
 
 // --- Components ---
+
+const Slider = ({ label, value, min, max, onChange, unit = '' }: { 
+  label: string; 
+  value: number; 
+  min: number; 
+  max: number; 
+  onChange: (val: number) => void;
+  unit?: string;
+}) => (
+  <div className="space-y-2">
+    <div className="flex justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-500">
+      <span>{label}</span>
+      <span className="text-white">{value}{unit}</span>
+    </div>
+    <input 
+      type="range" 
+      min={min} 
+      max={max} 
+      value={value} 
+      onChange={(e) => onChange(Number(e.target.value))}
+      className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+    />
+  </div>
+);
 
 const Square = React.memo(({ index, act, categoryId }: { index: number; act: Act; categoryId: string | null }) => {
   let colorClass = 'bg-white/20';
@@ -47,12 +85,12 @@ const Square = React.memo(({ index, act, categoryId }: { index: number; act: Act
   let opacity = 1;
   let isGlitching = false;
 
-  if (act === 'I') {
+  if (act === 'Setup' || act === 'I') {
     colorClass = 'bg-white/80';
   } else if (act === 'II') {
     if (categoryId && categoryId !== 'screen' && categoryId !== 'freedom') {
-      const cat = CATEGORIES.find(c => c.id === categoryId);
-      colorClass = cat ? cat.color : 'bg-neutral-900';
+      const catColor = CATEGORY_COLORS[categoryId as keyof typeof CATEGORY_COLORS] || 'bg-neutral-900';
+      colorClass = catColor;
       opacity = 0.4;
     } else {
       colorClass = 'bg-white/80';
@@ -101,16 +139,16 @@ const Square = React.memo(({ index, act, categoryId }: { index: number; act: Act
   );
 });
 
-const LifespanGrid = ({ act }: { act: Act }) => {
+const LifespanGrid = ({ act, categories, totalMonths }: { act: Act; categories: Category[]; totalMonths: number }) => {
   // Pre-calculate which category each square belongs to
   const squareMap = useMemo(() => {
-    const map: (string | null)[] = new Array(TOTAL_MONTHS).fill(null);
+    const map: (string | null)[] = new Array(totalMonths).fill(null);
     let currentIdx = 0;
     
     // Fill categories in order
-    CATEGORIES.forEach(cat => {
+    categories.forEach(cat => {
       for (let i = 0; i < cat.months; i++) {
-        if (currentIdx < TOTAL_MONTHS) {
+        if (currentIdx < totalMonths) {
           map[currentIdx] = cat.id;
           currentIdx++;
         }
@@ -118,7 +156,7 @@ const LifespanGrid = ({ act }: { act: Act }) => {
     });
     
     return map;
-  }, []);
+  }, [categories, totalMonths]);
 
   return (
     <div className="grid grid-cols-24 sm:grid-cols-32 md:grid-cols-36 lg:grid-cols-48 gap-1 p-4 max-w-6xl mx-auto">
@@ -129,7 +167,11 @@ const LifespanGrid = ({ act }: { act: Act }) => {
   );
 };
 
-const ActContent = ({ act }: { act: Act }) => {
+const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; categories: Category[]; totalMonths: number; userData: UserData }) => {
+  const freeMonths = categories.find(c => c.id === 'freedom')?.months || 0;
+  const screenMonths = categories.find(c => c.id === 'screen')?.months || 0;
+  const totalFree = freeMonths + screenMonths;
+
   switch (act) {
     case 'I':
       return (
@@ -140,8 +182,8 @@ const ActContent = ({ act }: { act: Act }) => {
         >
           <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Illusion of Forever</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            Meet our protagonist. 18 years old. A whole life ahead. 
-            <span className="text-white font-bold block mt-2">864 months.</span>
+            You are {userData.age} years old. Based on your expected lifespan of {userData.lifespan}, you have
+            <span className="text-white font-bold block mt-2">{totalMonths} months left.</span>
             It feels like an infinite ocean.
           </p>
         </motion.div>
@@ -160,7 +202,7 @@ const ActContent = ({ act }: { act: Act }) => {
             The grid begins to darken as time is "locked" away.
           </p>
           <div className="flex flex-wrap gap-4 mt-6">
-            {CATEGORIES.slice(0, 5).map(cat => (
+            {categories.slice(0, 5).map(cat => (
               <div key={cat.id} className="flex items-center gap-2 bg-neutral-900/50 px-3 py-1.5 rounded-full border border-white/10">
                 <div className={`w-3 h-3 rounded-full ${cat.color}`} />
                 <span className="text-xs font-mono uppercase tracking-wider">{cat.label}: {cat.months}m</span>
@@ -179,8 +221,8 @@ const ActContent = ({ act }: { act: Act }) => {
           <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-amber-500">The Silver Lining</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
             Wait. Look at what's left. 
-            <span className="text-white font-bold block mt-2">334 months of pure, uninterrupted freedom.</span>
-            Almost 28 years. This is where art happens. Where love is built. Where the world is traveled.
+            <span className="text-white font-bold block mt-2">{totalFree} months of pure, uninterrupted freedom.</span>
+            This is where art happens. Where love is built. Where the world is traveled.
           </p>
         </motion.div>
       );
@@ -191,15 +233,15 @@ const ActContent = ({ act }: { act: Act }) => {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-red-600">The 93% Trap</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-red-600">The Screen Trap</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
             But there is a predator in the room. 
-            The average 18-year-old will spend <span className="text-red-500 font-bold">93%</span> of that free time looking at a glowing rectangle.
-            TikTok, Netflix, and the algorithm claim their prize.
+            At {userData.screenHours} hours a day, you will spend <span className="text-red-500 font-bold">{totalFree > 0 ? Math.round((screenMonths / totalFree) * 100) : 0}%</span> of your free time looking at a glowing rectangle.
+            The algorithm claims its prize.
           </p>
           <div className="flex items-center gap-2 text-red-500 font-mono text-sm animate-pulse">
             <Smartphone size={16} />
-            <span>310 MONTHS CONSUMED</span>
+            <span>{screenMonths} MONTHS CONSUMED</span>
           </div>
         </motion.div>
       );
@@ -210,9 +252,9 @@ const ActContent = ({ act }: { act: Act }) => {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The 24 Months</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The {freeMonths} Months</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            This is all that remains. Two years. 
+            This is all that remains. {Math.round(freeMonths / 12)} years. 
             What will you do with them? 
             Or better yet... how will you <span className="text-amber-500 font-bold underline decoration-2 underline-offset-4">steal back</span> the red squares?
           </p>
@@ -225,16 +267,52 @@ const ActContent = ({ act }: { act: Act }) => {
           </button>
         </motion.div>
       );
+    default:
+      return null;
   }
 };
 
 export default function App() {
-  const [act, setAct] = useState<Act>('I');
+  const [act, setAct] = useState<Act>('Setup');
+  const [userData, setUserData] = useState<UserData>(DEFAULT_USER);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
 
-  const acts: Act[] = ['I', 'II', 'III', 'IV', 'V'];
+  const acts: Act[] = ['Setup', 'I', 'II', 'III', 'IV', 'V'];
   const currentIndex = acts.indexOf(act);
+
+  // --- Dynamic Math ---
+  const remainingYears = Math.max(0, userData.lifespan - userData.age);
+  const totalMonths = remainingYears * 12;
+
+  const dynamicCategories = useMemo(() => {
+    const sleepMonths = Math.round((userData.sleepHours / 24) * totalMonths);
+    
+    // Work until 65 or remaining life if already older
+    const workYears = Math.max(0, Math.min(remainingYears, 65 - userData.age));
+    const workMonths = Math.round((userData.workHours / (24 * 7)) * (workYears * 12));
+    
+    const basicNeedsMonths = Math.round((2 / 24) * totalMonths); // 2 hours/day
+    const choresMonths = Math.round((1 / 24) * totalMonths); // 1 hour/day
+    const commuteMonths = Math.round((1 / 24) * totalMonths); // 1 hour/day
+    
+    const necessaryMonths = sleepMonths + workMonths + basicNeedsMonths + choresMonths + commuteMonths;
+    const freeMonths = Math.max(0, totalMonths - necessaryMonths);
+    
+    const screenMonths = Math.round((userData.screenHours / 24) * totalMonths);
+    const actualScreenMonths = Math.min(freeMonths, screenMonths);
+    const pureFreedomMonths = Math.max(0, freeMonths - actualScreenMonths);
+
+    return [
+      { id: 'sleep', label: 'Sleep', months: sleepMonths, color: 'bg-neutral-800', description: 'Resting.' },
+      { id: 'work', label: 'Work/School', months: workMonths, color: 'bg-neutral-700', description: 'Earning.' },
+      { id: 'needs', label: 'Basic Needs', months: basicNeedsMonths, color: 'bg-neutral-600', description: 'Survival.' },
+      { id: 'chores', label: 'Chores', months: choresMonths, color: 'bg-neutral-500', description: 'Maintenance.' },
+      { id: 'commute', label: 'Commuting', months: commuteMonths, color: 'bg-neutral-400', description: 'Transit.' },
+      { id: 'screen', label: 'Screen Time', months: actualScreenMonths, color: 'bg-red-600', description: 'Digital consumption.' },
+      { id: 'freedom', label: 'Pure Freedom', months: pureFreedomMonths, color: 'bg-amber-500', description: 'Your legacy.' },
+    ];
+  }, [userData, totalMonths, remainingYears]);
 
   const triggerShake = () => {
     setIsShaking(true);
@@ -298,14 +376,67 @@ export default function App() {
         <section className="w-full lg:w-1/2 order-2 lg:order-1">
           <div className="relative group">
             <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 blur-2xl" />
-            <LifespanGrid act={act} />
+            <LifespanGrid act={act} categories={dynamicCategories} totalMonths={totalMonths} />
           </div>
         </section>
 
         {/* Narrative Section */}
-        <section className="w-full lg:w-1/2 order-1 lg:order-2 flex flex-col justify-center min-h-[400px]">
+        <section className="w-full lg:w-1/2 order-1 lg:order-2 flex flex-col justify-center min-h-[500px]">
           <div className={`transition-all duration-500 ${isTransitioning ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
-            <ActContent act={act} />
+            {act === 'Setup' ? (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-8"
+              >
+                <div className="space-y-2">
+                  <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">Personalize Your Journey</h2>
+                  <p className="text-neutral-400">Before we begin, let's look at your specific reality.</p>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Slider 
+                    label="Current Age" 
+                    value={userData.age} 
+                    min={1} max={userData.lifespan - 1} 
+                    onChange={(age) => setUserData(prev => ({ ...prev, age }))} 
+                  />
+                  <Slider 
+                    label="Expected Lifespan" 
+                    value={userData.lifespan} 
+                    min={userData.age + 1} max={120} 
+                    onChange={(lifespan) => setUserData(prev => ({ ...prev, lifespan }))} 
+                  />
+                  <Slider 
+                    label="Sleep (Hours/Day)" 
+                    value={userData.sleepHours} 
+                    min={1} max={12} 
+                    onChange={(sleepHours) => setUserData(prev => ({ ...prev, sleepHours }))} 
+                  />
+                  <Slider 
+                    label="Work (Hours/Week)" 
+                    value={userData.workHours} 
+                    min={0} max={100} 
+                    onChange={(workHours) => setUserData(prev => ({ ...prev, workHours }))} 
+                  />
+                  <Slider 
+                    label="Screen Time (Hours/Day)" 
+                    value={userData.screenHours} 
+                    min={0} max={18} 
+                    onChange={(screenHours) => setUserData(prev => ({ ...prev, screenHours }))} 
+                  />
+                </div>
+
+                <div className="bg-neutral-900/50 p-4 rounded-xl border border-white/5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-mono text-neutral-500 uppercase">Total Remaining Months</span>
+                    <span className="text-2xl font-display font-bold text-amber-500">{totalMonths}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <ActContent act={act} categories={dynamicCategories} totalMonths={totalMonths} userData={userData} />
+            )}
           </div>
 
           {/* Controls */}
@@ -323,7 +454,7 @@ export default function App() {
               className="flex-1 flex items-center justify-between p-4 rounded-full bg-white text-black font-bold hover:bg-amber-500 disabled:opacity-20 disabled:cursor-not-allowed transition-all group"
             >
               <span className="pl-4">
-                {currentIndex === acts.length - 1 ? 'End of Journey' : 'Continue Narrative'}
+                {act === 'Setup' ? 'Begin Journey' : currentIndex === acts.length - 1 ? 'End of Journey' : 'Continue Narrative'}
               </span>
               <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
                 <ChevronRight />
@@ -339,7 +470,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Clock size={12} />
-              <span>Remaining: {TOTAL_MONTHS - (act === 'I' ? 0 : 530)} Months</span>
+              <span>Remaining: {totalMonths} Months</span>
             </div>
             <div className="flex items-center gap-1">
               <Heart size={12} className="text-red-500" />
@@ -347,7 +478,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-center sm:text-right">
-            Based on statistical averages for a 90-year lifespan starting at 18.
+            Dynamic calculation based on your inputs.
           </div>
         </div>
       </footer>
