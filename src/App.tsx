@@ -180,11 +180,11 @@ const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; cate
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Illusion of Forever</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Reality of Your Time</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            You are {userData.age} years old. Based on your expected lifespan of {userData.lifespan}, you have
+            You are {userData.age} years old. With a lifespan of {userData.lifespan}, the clock is already ticking. You have 
             <span className="text-white font-bold block mt-2">{totalMonths} months left.</span>
-            It feels like an infinite ocean.
+            The ocean feels infinite until you start measuring it.
           </p>
         </motion.div>
       );
@@ -195,11 +195,11 @@ const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; cate
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Great Subtraction</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Cost of Survival</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            Life has requirements. Biology and society take their toll. 
-            Sleep, work, chores, and the daily commute. 
-            The grid begins to darken as time is "locked" away.
+            Survival has a tax. Society and biology take their cut before you even start living. 
+            Sleep, work, and the daily grind. 
+            The grid darkens as your months are claimed by obligations.
           </p>
           <div className="flex flex-wrap gap-4 mt-6">
             {categories.slice(0, 5).map(cat => (
@@ -218,11 +218,11 @@ const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; cate
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-amber-500">The Silver Lining</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-amber-500">Your Unclaimed Future</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            Wait. Look at what's left. 
-            <span className="text-white font-bold block mt-2">{totalFree} months of pure, uninterrupted freedom.</span>
-            This is where art happens. Where love is built. Where the world is traveled.
+            This is what remains. 
+            <span className="text-white font-bold block mt-2">{totalFree} months of pure, unclaimed potential.</span>
+            This is where you build your legacy, craft your art, and actually live.
           </p>
         </motion.div>
       );
@@ -233,15 +233,15 @@ const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; cate
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-red-600">The Screen Trap</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight text-red-600">The Digital Tax</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            But there is a predator in the room. 
-            At {userData.screenHours} hours a day, you will spend <span className="text-red-500 font-bold">{totalFree > 0 ? Math.round((screenMonths / totalFree) * 100) : 0}%</span> of your free time looking at a glowing rectangle.
-            The algorithm claims its prize.
+            But there is a hunter in the room. 
+            At {userData.screenHours} hours a day, you trade <span className="text-red-500 font-bold">{totalFree > 0 ? Math.round((screenMonths / totalFree) * 100) : 0}%</span> of your potential for a glowing rectangle.
+            The algorithm claims its bounty.
           </p>
           <div className="flex items-center gap-2 text-red-500 font-mono text-sm animate-pulse">
             <Smartphone size={16} />
-            <span>{screenMonths} MONTHS CONSUMED</span>
+            <span>{screenMonths} MONTHS LOST TO SCREENS</span>
           </div>
         </motion.div>
       );
@@ -252,18 +252,18 @@ const ActContent = ({ act, categories, totalMonths, userData }: { act: Act; cate
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The {freeMonths} Months</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">The Final {freeMonths} Months</h2>
           <p className="text-lg md:text-xl text-neutral-400 max-w-2xl">
-            This is all that remains. {Math.round(freeMonths / 12)} years. 
+            This is all that's left. {Math.round(freeMonths / 12)} real years. 
             What will you do with them? 
-            Or better yet... how will you <span className="text-amber-500 font-bold underline decoration-2 underline-offset-4">steal back</span> the red squares?
+            How will you <span className="text-amber-500 font-bold underline decoration-2 underline-offset-4">steal your life back</span> from the red squares?
           </p>
           <button 
             onClick={() => window.location.reload()}
             className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-amber-500 transition-colors mt-8"
           >
             <RotateCcw size={18} />
-            Restart Journey
+            Reclaim Your Time
           </button>
         </motion.div>
       );
@@ -454,7 +454,7 @@ export default function App() {
               className="flex-1 flex items-center justify-between p-4 rounded-full bg-white text-black font-bold hover:bg-amber-500 disabled:opacity-20 disabled:cursor-not-allowed transition-all group"
             >
               <span className="pl-4">
-                {act === 'Setup' ? 'Begin Journey' : currentIndex === acts.length - 1 ? 'End of Journey' : 'Continue Narrative'}
+                {act === 'Setup' ? 'See Your Reality' : currentIndex === acts.length - 1 ? 'End of Journey' : 'Next Realization'}
               </span>
               <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
                 <ChevronRight />

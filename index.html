@@ -4,61 +4,55 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary SEO -->
-    <title>The 334 Months — How Will You Spend Your Free Time?</title>
-    <meta name="description" content="A powerful interactive life visualization. See how sleep, work, and screen time consume your remaining months — and discover how many months you truly have left for yourself." />
-    <meta name="keywords" content="life calendar, time visualization, mortality, screen time, productivity, life expectancy, time management, memento mori, your life in months, free time calculator" />
+    <!--
+      ============================================================
+      PRIMARY SEO
+      Target clusters:
+        1. Life visualization  → "life in months", "life calendar", "your life in months"
+        2. Mortality/mindset   → "memento mori", "mortality calculator", "intentional living"
+        3. Screen time         → "screen time calculator", "how much time on phone", "reduce screen time"
+        4. Free time           → "free time calculator", "how much free time do I have"
+        5. Productivity        → "time management", "life expectancy calculator", "how to live intentionally"
+      ============================================================
+    -->
+
+    <title>Life in Months Calculator: The Memento Mori Visualizer</title>
+
+    <meta name="description" content="Stop doomscrolling and reclaim your time. The 334 Months is a Memento Mori life calendar that visualizes how sleep, work, and screen time consume your remaining freedom." />
+
+    <meta name="keywords" content="life in months, memento mori calendar, life calendar, screen time calculator, free time calculator, intentional living, digital minimalism, life expectancy visualizer, how many months do I have left" />
+
     <meta name="author" content="The 334 Months" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <link rel="canonical" href="https://shashank99928.github.io/The-334-Months/" />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://shashank99928.github.io/The-334-Months/" />
-    <meta property="og:title" content="The 334 Months — How Will You Spend Your Free Time?" />
-    <meta property="og:description" content="See how sleep, work, and screen time consume your remaining months. An interactive life visualization that might change how you think about time." />
+    <meta property="og:title" content="Life in Months Calculator — How Much Free Time Do You Really Have?" />
+    <meta property="og:description" content="See how sleep, work, and screen time secretly consume your remaining months. An interactive memento mori life calendar that will change how you think about time." />
     <meta property="og:image" content="https://shashank99928.github.io/The-334-Months/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The 334 Months — a grid of squares representing your remaining months of life, colored by sleep, work, screen time, and freedom." />
     <meta property="og:site_name" content="The 334 Months" />
     <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://shashank99928.github.io/The-334-Months/" />
-    <meta name="twitter:title" content="The 334 Months — How Will You Spend Your Free Time?" />
-    <meta name="twitter:description" content="See how sleep, work, and screen time consume your remaining months. An interactive life visualization that might change how you think about time." />
+    <meta name="twitter:title" content="Life in Months Calculator — How Much Free Time Do You Really Have?" />
+    <meta name="twitter:description" content="Enter your age, sleep, work and screen time. See how many months you truly have left for yourself. A visual memento mori that might change your day." />
     <meta name="twitter:image" content="https://shashank99928.github.io/The-334-Months/og-image.png" />
+    <meta name="twitter:image:alt" content="Life grid showing months of freedom, sleep, work, and screen time" />
 
-    <!-- Theme & App -->
+    <!-- App & Theme -->
     <meta name="theme-color" content="#000000" />
     <meta name="color-scheme" content="dark" />
     <meta name="application-name" content="The 334 Months" />
-
-    <!-- Structured Data: WebApplication -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "The 334 Months",
-      "url": "https://shashank99928.github.io/The-334-Months/",
-      "description": "An interactive life visualization tool that calculates how your remaining months are divided between sleep, work, screen time, and true personal freedom.",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "Any",
-      "browserRequirements": "Requires JavaScript",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "Personalized remaining months calculator",
-        "Sleep, work and screen time breakdown",
-        "Interactive life grid visualization",
-        "Free time vs screen time comparison"
-      ]
-    }
-    </script>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="334 Months" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23000'/><text y='.9em' font-size='55' font-family='serif' font-weight='900' font-style='italic' fill='%23f59e0b' x='10'>334</text></svg>" />
@@ -66,9 +60,192 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ============================================================
+         STRUCTURED DATA
+         1. WebApplication — general app schema
+         2. FAQPage        — triggers "People also ask" rich results
+         3. HowTo          — tutorial-style rich result
+         ============================================================ -->
+
+    <!-- Schema 1: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "The 334 Months — Life in Months Calculator",
+      "alternateName": ["Life in Months Calculator", "Free Time Calculator", "Memento Mori Life Calendar"],
+      "url": "https://shashank99928.github.io/The-334-Months/",
+      "description": "An interactive life visualization tool that calculates how your remaining months are divided between sleep, work, screen time, and true personal freedom. Enter your age, sleep hours, work hours, and screen time to see your real free time.",
+      "applicationCategory": "LifestyleApplication",
+      "applicationSubCategory": "Productivity",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en-US",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Personalized remaining months calculator",
+        "Sleep, work, commute, and screen time breakdown",
+        "Interactive life grid visualization (memento mori life calendar)",
+        "Free time vs screen time comparison",
+        "Intentional living insights",
+        "Customizable age, lifespan, and daily habits"
+      ],
+      "screenshot": "https://shashank99928.github.io/The-334-Months/og-image.png",
+      "creator": {
+        "@type": "Person",
+        "url": "https://shashank99928.github.io/The-334-Months/"
+      }
+    }
+    </script>
+
+    <!-- Schema 2: FAQPage — triggers "People Also Ask" featured snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many free months do I have left in my life?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The average person has roughly 1,000 months in total. After accounting for sleep, work, and daily survival, many adults in their 30s have fewer than 300 months of 'pure' freedom remaining. The 334 Months visualizer calculates your personal deadline based on your habits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a Memento Mori life calendar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Memento Mori calendar (Latin for 'Remember you must die') is a visual tool representing your lifespan in weeks or months. It helps clarify priorities by showing time as a finite grid instead of an abstract concept."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does screen time affect my life expectancy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "While screen time doesn't necessarily 'shorten' your biological life, it claims a massive 'Digital Tax' on your conscious life. At 7 hours a day, screens consume nearly 30% of your waking hours. This effectively reduces your available 'freedom months' by years."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I live more intentionally?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Intentional living starts with measuring what matters. By visualizing your life in months, you can see the trade-offs between 'The Digital Tax' (doomscrolling) and your legacy. Most people find that seeing their remaining months in a grid is the ultimate motivation to reclaim their time."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema 3: HowTo — ranks for "how to visualize your life" instructional queries -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to See How Many Months of Free Time You Have Left",
+      "description": "Use The 334 Months life calendar to calculate your remaining free months after sleep, work, and screen time are accounted for.",
+      "totalTime": "PT2M",
+      "tool": {
+        "@type": "HowToTool",
+        "name": "The 334 Months — Life in Months Calculator",
+        "url": "https://shashank99928.github.io/The-334-Months/"
+      },
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Enter your age and expected lifespan",
+          "text": "Use the sliders to set your current age and your expected lifespan. The tool will calculate your total remaining months."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Set your sleep hours",
+          "text": "Enter how many hours per night you sleep on average. Sleep is the largest single consumer of your remaining months."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Enter your work hours per week",
+          "text": "Set your average working hours per week. The calculator accounts for work until typical retirement age."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Set your screen time hours per day",
+          "text": "Enter your daily screen time (phone, TV, social media combined). This is subtracted directly from your free time."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "See your life grid and narrative",
+          "text": "Click 'Begin Journey' to walk through a visual narrative showing how your months are divided — and how many remain truly free."
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Noscript fallback: crawlable static content for search engines.
+      Google can render JavaScript but static text is guaranteed to be indexed.
+    -->
+    <noscript>
+      <main style="font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#111;line-height:1.7">
+        <h1>The 334 Months — Life in Months Calculator</h1>
+        <p>
+          <strong>How many months of true freedom do you have left?</strong>
+          The 334 Months is a free, interactive life calendar and free time calculator that breaks down
+          your remaining lifespan into what's really consumed by sleep, work, commuting, and screen time —
+          and what's genuinely yours.
+        </p>
+
+        <h2>What is a life in months calculator?</h2>
+        <p>
+          A "life in months" calculator converts your lifespan into months to make finite time feel real and tangible.
+          A 90-year life is 1,080 months. Most people in their 20s have between 700 and 850 months remaining.
+          After sleep, work, commuting, chores, and screen time are subtracted, the actual free months
+          left for art, travel, relationships, and legacy is often surprisingly small.
+        </p>
+
+        <h2>What is memento mori?</h2>
+        <p>
+          Memento mori (Latin: "remember that you will die") is a Stoic practice of contemplating mortality
+          to clarify priorities. A memento mori life calendar visualizes your entire lifespan as a grid —
+          each cell represents a week or month. The 334 Months adapts this into an interactive tool that
+          shows not just what has passed, but how your remaining time is actually allocated.
+        </p>
+
+        <h2>How much free time does screen time consume?</h2>
+        <p>
+          At the 2026 global average of 6 hours 54 minutes of daily screen time, screens consume roughly
+          29% of a person's entire waking life. Measured against only discretionary hours
+          (after sleep, work, and necessities), screen time claims over 50–70% of true free time.
+          Use The 334 Months to calculate your personal figure.
+        </p>
+
+        <h2>Features</h2>
+        <ul>
+          <li>Personalized remaining months calculator based on your age and expected lifespan</li>
+          <li>Breakdown of sleep, work, commute, chores, screen time, and pure freedom months</li>
+          <li>Interactive life grid visualization inspired by memento mori life calendars</li>
+          <li>Narrative storytelling that walks you through the realization step by step</li>
+          <li>100% free — no sign-up required</li>
+        </ul>
+
+        <p>
+          Enable JavaScript to use The 334 Months interactive life calendar.
+          Visit <a href="https://shashank99928.github.io/The-334-Months/">The 334 Months</a>.
+        </p>
+      </main>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
