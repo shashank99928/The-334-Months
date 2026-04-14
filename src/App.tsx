@@ -23,16 +23,24 @@ interface UserData {
   age: number;
   sleepHours: number;
   workHours: number;
+  commuteHours: number;
   screenHours: number;
+  choresHours: number;
+  needsHours: number;
   lifespan: number;
+  retirementAge: number;
 }
 
 const DEFAULT_USER: UserData = {
   age: 18,
   sleepHours: 8,
   workHours: 40,
+  commuteHours: 1,
   screenHours: 7,
+  choresHours: 1,
+  needsHours: 2,
   lifespan: 90,
+  retirementAge: 65,
 };
 
 interface Category {
@@ -286,33 +294,41 @@ export default function App() {
   const totalMonths = remainingYears * 12;
 
   const dynamicCategories = useMemo(() => {
-    const sleepMonths = Math.round((userData.sleepHours / 24) * totalMonths);
+    // 1. Total remaining volume (Derived from props to ensure reactivity)
+    const currentTotal = totalMonths;
     
-    // Work until 65 or remaining life if already older
-    const workYears = Math.max(0, Math.min(remainingYears, 65 - userData.age));
-    const workMonths = Math.round((userData.workHours / (24 * 7)) * (workYears * 12));
+    // 2. Sleep (Universal)
+    const sleepMonths = Math.round((userData.sleepHours / 24) * currentTotal);
     
-    const basicNeedsMonths = Math.round((2 / 24) * totalMonths); // 2 hours/day
-    const choresMonths = Math.round((1 / 24) * totalMonths); // 1 hour/day
-    const commuteMonths = Math.round((1 / 24) * totalMonths); // 1 hour/day
+    // 3. Work & Commute (Period-specific)
+    const remYears = Math.max(0, userData.lifespan - userData.age);
+    const workYears = Math.max(0, Math.min(remYears, userData.retirementAge - userData.age));
+    const workMonthsVolume = Math.round((userData.workHours / (24 * 7)) * (workYears * 12));
+    const commuteMonthsVolume = Math.round((userData.commuteHours * 5 / (24 * 7)) * (workYears * 12));
     
-    const necessaryMonths = sleepMonths + workMonths + basicNeedsMonths + choresMonths + commuteMonths;
-    const freeMonths = Math.max(0, totalMonths - necessaryMonths);
+    // 4. Maintenance (Universal)
+    const basicNeedsMonths = Math.round((userData.needsHours / 24) * currentTotal);
+    const choresMonths = Math.round((userData.choresHours / 24) * currentTotal);
     
-    const screenMonths = Math.round((userData.screenHours / 24) * totalMonths);
-    const actualScreenMonths = Math.min(freeMonths, screenMonths);
-    const pureFreedomMonths = Math.max(0, freeMonths - actualScreenMonths);
+    // 5. Calculate Freedom
+    const necessaryMonths = sleepMonths + workMonthsVolume + basicNeedsMonths + choresMonths + commuteMonthsVolume;
+    const freeMonthsPotential = Math.max(0, currentTotal - necessaryMonths);
+    
+    // 6. Screen Time (Eats freedom first)
+    const screenMonthsPotential = Math.round((userData.screenHours / 24) * currentTotal);
+    const actualScreenMonths = Math.min(freeMonthsPotential, screenMonthsPotential);
+    const pureFreedomMonths = Math.max(0, freeMonthsPotential - actualScreenMonths);
 
     return [
       { id: 'sleep', label: 'Sleep', months: sleepMonths, color: 'bg-neutral-800', description: 'Resting.' },
-      { id: 'work', label: 'Work/School', months: workMonths, color: 'bg-neutral-700', description: 'Earning.' },
+      { id: 'work', label: 'Work/School', months: workMonthsVolume, color: 'bg-neutral-700', description: 'Earning.' },
       { id: 'needs', label: 'Basic Needs', months: basicNeedsMonths, color: 'bg-neutral-600', description: 'Survival.' },
       { id: 'chores', label: 'Chores', months: choresMonths, color: 'bg-neutral-500', description: 'Maintenance.' },
-      { id: 'commute', label: 'Commuting', months: commuteMonths, color: 'bg-neutral-400', description: 'Transit.' },
+      { id: 'commute', label: 'Commuting', months: commuteMonthsVolume, color: 'bg-neutral-400', description: 'Transit.' },
       { id: 'screen', label: 'Screen Time', months: actualScreenMonths, color: 'bg-red-600', description: 'Digital consumption.' },
       { id: 'freedom', label: 'Pure Freedom', months: pureFreedomMonths, color: 'bg-amber-500', description: 'Your legacy.' },
     ];
-  }, [userData, totalMonths, remainingYears]);
+  }, [userData.sleepHours, userData.workHours, userData.commuteHours, userData.screenHours, userData.needsHours, userData.choresHours, userData.lifespan, userData.age, userData.retirementAge, totalMonths]);
 
   const triggerShake = () => {
     setIsShaking(true);
@@ -399,13 +415,19 @@ export default function App() {
                     label="Current Age" 
                     value={userData.age} 
                     min={1} max={userData.lifespan - 1} 
-                    onChange={(age) => setUserData(prev => ({ ...prev, age }))} 
+                    onChange={(age) => setUserData(prev => ({ ...prev, age: Math.min(age, prev.lifespan - 1) }))} 
                   />
                   <Slider 
                     label="Expected Lifespan" 
                     value={userData.lifespan} 
                     min={userData.age + 1} max={120} 
-                    onChange={(lifespan) => setUserData(prev => ({ ...prev, lifespan }))} 
+                    onChange={(lifespan) => setUserData(prev => ({ ...prev, lifespan: Math.max(lifespan, prev.age + 1) }))} 
+                  />
+                  <Slider 
+                    label="Retirement Age" 
+                    value={userData.retirementAge} 
+                    min={userData.age} max={userData.lifespan} 
+                    onChange={(retirementAge) => setUserData(prev => ({ ...prev, retirementAge }))} 
                   />
                   <Slider 
                     label="Sleep (Hours/Day)" 
@@ -420,17 +442,45 @@ export default function App() {
                     onChange={(workHours) => setUserData(prev => ({ ...prev, workHours }))} 
                   />
                   <Slider 
+                    label="Commute (Hours/Day)" 
+                    value={userData.commuteHours} 
+                    min={0} max={6} 
+                    onChange={(commuteHours) => setUserData(prev => ({ ...prev, commuteHours }))} 
+                  />
+                  <Slider 
                     label="Screen Time (Hours/Day)" 
                     value={userData.screenHours} 
                     min={0} max={18} 
                     onChange={(screenHours) => setUserData(prev => ({ ...prev, screenHours }))} 
                   />
+                  <Slider 
+                    label="Chores & Needs (Hours/Day)" 
+                    value={userData.choresHours + userData.needsHours} 
+                    min={1} max={10} 
+                    onChange={(total) => setUserData(prev => ({ ...prev, choresHours: Math.floor(total * 0.3), needsHours: Math.ceil(total * 0.7) }))} 
+                  />
                 </div>
 
-                <div className="bg-neutral-900/50 p-4 rounded-xl border border-white/5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-mono text-neutral-500 uppercase">Total Remaining Months</span>
-                    <span className="text-2xl font-display font-bold text-amber-500">{totalMonths}</span>
+                {/* Day Overload Warning */}
+                {userData.sleepHours + (userData.workHours / 7) + (userData.commuteHours * 5/7) + userData.screenHours + (userData.choresHours + userData.needsHours) > 23.5 && (
+                   <div className="bg-red-500/10 p-4 rounded-xl border border-red-500/20 text-red-500 text-xs font-mono">
+                    <Zap size={14} className="inline mr-2 mb-1" />
+                    WARNING: Your daily breakdown exceeds 24 hours. Your calculated freedom will be limited.
+                   </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-neutral-900/50 p-4 rounded-xl border border-white/5 space-y-1">
+                    <span className="text-[10px] font-mono text-neutral-500 uppercase">Total Life Remaining</span>
+                    <div className="text-2xl font-display font-bold text-white leading-none">
+                      {totalMonths} <span className="text-xs font-normal text-neutral-500 uppercase">Months</span>
+                    </div>
+                  </div>
+                  <div className="bg-amber-500/10 p-4 rounded-xl border border-amber-500/20 space-y-1">
+                    <span className="text-[10px] font-mono text-amber-500 uppercase">Untouchable Freedom</span>
+                    <div className="text-2xl font-display font-bold text-amber-500 leading-none">
+                      {dynamicCategories.find(c => c.id === 'freedom')?.months || 0} <span className="text-xs font-normal text-amber-500/50 uppercase">Months</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
