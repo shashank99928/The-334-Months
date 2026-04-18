@@ -1,20 +1,44 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# The 334 Months
 
-# Run and deploy your AI Studio app
+A stark, visual breakdown of an 18-year-old's remaining lifespan, highlighting the impact of screen time on life expectancy.
 
-This contains everything you need to run your app locally.
+## About
 
-View your app in AI Studio: https://ai.studio/apps/d5961dae-727e-40d6-a0ad-e58790c420ef
+"The 334 Months" is an interactive visualization designed to make the concept of time passage tangible and thought-provoking. By breaking down the average remaining lifespan into months, it provides a sobering perspective on how screen time consumption affects the years ahead.
 
-## Run Locally
+## Getting Started
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+
+   ```bash
+   npm install
+   ```
+
+2. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser and navigate to `http://localhost:3000`
+
+## Build
+
+To build for production:
+
+```bash
+npm run build
+```
+
+The build output will be in the `dist/` directory.
+
+## Tech Stack
+
+- **React** - UI framework
+- **TypeScript** - Type-safe development
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
+- **Motion** - Animations
